@@ -1,0 +1,49 @@
+/* 메시지 박스 컨테이너 */
+.container {
+    margin-top: 10vh;
+    height: 90vh;
+    display: flex;
+    padding: 0;
+    flex-direction: column;
+}
+
+/* 채팅 메시지 영역 */
+.chatMessages {
+    flex: 1; /* 남은 공간을 채움 */
+    overflow-y: auto; /* 스크롤 활성화 */
+    display: flex;
+    flex-direction: column; /* 세로로 쌓임 */
+    gap: 50px; /* 메시지 간 간격 */
+    padding: 50px 15%;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+/* 메시지 박스 스타일 */
+.message {
+    display: inline-block; /* 내용 크기에 맞춤 */
+    max-width: 80%; /* 메시지 박스 최대 너비 */
+    padding: 10px;
+    border-radius: 10px;
+    word-wrap: break-word; /* 긴 단어 줄바꿈 */
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+.userMessage {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end; /* 사용자 메시지 오른쪽 정렬 */
+}
+
+.botMessage {
+    background-color: #e9ecef;
+    color: black;
+    align-self: flex-start; /* 봇 메시지 왼쪽 정렬 */
+}
+
+/* 입력 영역 */
+.inputRow {
+    padding: 10px 15%;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ddd;
+}
