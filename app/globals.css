@@ -35,6 +35,13 @@ a {
   text-decoration: none;
 }
 
+.max-min-width {
+  /* 화면 크기에 따른 최소 및 최대 크기 설정 */
+  margin: 0 auto !important; /* 수평 중앙 정렬 */
+  max-width: 800px !important; /* 최대 너비 */
+  min-width: 320px !important; /* 최소 너비 */
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

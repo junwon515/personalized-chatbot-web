@@ -6,5 +6,29 @@
     z-index: 1000;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 10px 15%;
+    padding: 10px 0;
+}
+
+.inputGroup {
+    margin: 10px 0;
+}
+
+.label-goal {
+    background-color: #ffcdd2 !important; /* 연한 분홍색 */
+    color: #b71c1c !important; /* 진한 빨간색 */
+}
+
+.label-task {
+    background-color: #bbdefb !important; /* 연한 파란색 */
+    color: #0d47a1 !important; /* 진한 파란색 */
+}
+
+.label-creativity {
+    background-color: #c8e6c9 !important; /* 연한 초록색 */
+    color: #1b5e20 !important; /* 진한 초록색 */
+}
+
+.label-response {
+    background-color: #fff9c4 !important; /* 연한 노란색 */
+    color: #f57f17 !important; /* 진한 노란색 */
 }
