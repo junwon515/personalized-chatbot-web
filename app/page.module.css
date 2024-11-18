@@ -1,9 +1,8 @@
 /* 메시지 박스 컨테이너 */
 .container {
-    margin-top: 12vh;
-    height: 88vh;
+    padding: 135px 0 0 0;
+    height: 100vh;
     display: flex;
-    padding: 0;
     flex-direction: column;
 }
 
@@ -52,4 +51,14 @@
     padding: 10px;
     background-color: #f1f1f1;
     border-top: 1px solid #ddd;
+}
+
+/* 브라우저 넓이가 455px 이하일 때 */
+@media (max-width: 455px) {
+    .container {
+        padding: 175px 0 0 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
 }

@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useCustomSetting } from './data/client-data';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism'; // 코드 스타일
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -22,6 +24,7 @@ export default function Home() {
 
     const userMessage = { role: "user", content: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setInput("");
 
     setLoading(true); // 요청 시작 시 로딩 상태로 변경
 
@@ -49,10 +52,27 @@ export default function Home() {
     } finally {
       setLoading(false); // 응답을 받았으면 로딩 상태 종료
     }
-
-    setInput("");
   };
-  
+
+  const renderMessageContent = (content) => {
+    // 코드 블록인지 확인하고, 코드 블록일 경우 하이라이팅
+    const codeBlockRegex = /```([\s\S]+?)```/g; // ```로 감싸진 코드 찾기
+    const parts = content.split(codeBlockRegex).map((part, index) => {
+      if (index % 2 === 1) {
+        // 코드 부분
+        return (
+          <SyntaxHighlighter key={index} language="javascript" style={solarizedlight}>
+            {part}
+          </SyntaxHighlighter>
+        );
+      }
+      // 일반 텍스트
+      return part;
+    });
+
+    return parts;
+  };
+
   return (
     <Container fluid className={styles.container}>
       {/* 채팅 메시지 영역 */}
@@ -65,7 +85,7 @@ export default function Home() {
                 msg.role === "user" ? styles.userMessage : styles.botMessage
               }`}
             >
-              {msg.content}
+              {renderMessageContent(msg.content)}
             </div>
           ))}
           <div ref={messagesEndRef} />
