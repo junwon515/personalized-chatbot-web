@@ -21,7 +21,7 @@
     flex-direction: column; /* 세로로 쌓임 */
     gap: 50px; /* 메시지 간 간격 */
     width: 100%;
-    padding: 20px;
+    padding: 0 20px;
 }
 
 /* 메시지 박스 스타일 */
@@ -44,6 +44,20 @@
     background-color: #e9ecef;
     color: black;
     align-self: flex-start; /* 봇 메시지 왼쪽 정렬 */
+}
+
+.reactMarkdown p,
+.reactMarkdown h1,
+.reactMarkdown h2,
+.reactMarkdown h3,
+.reactMarkdown h4,
+.reactMarkdown h5,
+.reactMarkdown h6,
+.reactMarkdown blockquote,
+.reactMarkdown pre,
+.reactMarkdown code {
+  margin: 0; /* 마진 제거 */
+  padding: 0; /* 패딩 제거 */
 }
 
 /* 입력 영역 */

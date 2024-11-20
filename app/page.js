@@ -3,9 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useCustomSetting } from './data/client-data';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'; // GitHub Flavored Markdown (GFM)
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism'; // 코드 스타일
-import styles from "./page.module.css";
+import { light  } from 'react-syntax-highlighter/dist/esm/styles/prism'; // 하이라이팅 스타일
+import styles from "./page.module.css"; // 외부 스타일
 
 export default function Home() {
   const { goal, task, creativity, responseFormat, messages, setMessages } = useCustomSetting();
@@ -54,23 +56,24 @@ export default function Home() {
     }
   };
 
-  const renderMessageContent = (content) => {
-    // 코드 블록인지 확인하고, 코드 블록일 경우 하이라이팅
-    const codeBlockRegex = /```([\s\S]+?)```/g; // ```로 감싸진 코드 찾기
-    const parts = content.split(codeBlockRegex).map((part, index) => {
-      if (index % 2 === 1) {
-        // 코드 부분
-        return (
-          <SyntaxHighlighter key={index} language="javascript" style={solarizedlight}>
-            {part}
-          </SyntaxHighlighter>
-        );
+  // ReactMarkdown에서 코드 블록을 커스터마이징하여 하이라이팅 적용
+  const customRenderers = {
+    // ReactMarkdown에서 `pre`와 `code`에 대한 스타일 및 구문 강조 적용
+    code: ({ node, inline, className, children }) => {
+      const language = className?.replace("language-", "") || "";
+      if (inline) {
+        return <code className={styles.inlineCode}>{children}</code>;
       }
-      // 일반 텍스트
-      return part;
-    });
-
-    return parts;
+      return (
+        <SyntaxHighlighter
+          language={language}
+          style={light} // 하이라이팅 스타일
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+      );
+    },
+    pre: ({ children }) => <pre className={styles.codeBlock}>{children}</pre>,
   };
 
   return (
@@ -85,7 +88,13 @@ export default function Home() {
                 msg.role === "user" ? styles.userMessage : styles.botMessage
               }`}
             >
-              {renderMessageContent(msg.content)}
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={customRenderers}
+                className={styles.reactMarkdown}
+              >
+                {msg.content}
+              </ReactMarkdown>
             </div>
           ))}
           <div ref={messagesEndRef} />
