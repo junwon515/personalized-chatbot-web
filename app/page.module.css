@@ -56,8 +56,8 @@
 .reactMarkdown blockquote,
 .reactMarkdown pre,
 .reactMarkdown code {
-  margin: 0; /* 마진 제거 */
-  padding: 0; /* 패딩 제거 */
+    margin: 0; /* 마진 제거 */
+    padding: 0; /* 패딩 제거 */
 }
 
 /* 입력 영역 */

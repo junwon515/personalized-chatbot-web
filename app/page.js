@@ -115,18 +115,22 @@ export default function Home() {
 
   // ReactMarkdown에서 코드 블록을 커스터마이징하여 하이라이팅 적용
   const customRenderers = {
-    code: ({ node, inline, className, children }) => {
-      const language = className?.replace("language-", "") || "";
-      if (inline) {
-        return <code className={styles.inlineCode}>{children}</code>;
-      }
-      return (
-        <SyntaxHighlighter language={language}>
-          {String(children).replace(/\n$/, "")}
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || '');
+      return !inline && match ? (
+        <SyntaxHighlighter
+          language={match[1]}
+          PreTag="div"
+          {...props}
+        >
+          {String(children).replace(/\n$/, '')}
         </SyntaxHighlighter>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
       );
     },
-    pre: ({ children }) => <pre className={styles.codeBlock}>{children}</pre>,
   };
 
   return (
@@ -139,13 +143,17 @@ export default function Home() {
               key={index}
               className={`${styles.message} ${msg.role === "user" ? styles.userMessage : styles.botMessage}`}
             >
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={customRenderers}
-                className={styles.reactMarkdown}
-              >
-                {msg.content}
-              </ReactMarkdown>
+              {msg.role === "user" ? (
+                <div>{msg.content}</div>
+              ) : (
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={customRenderers}
+                  className={styles.reactMarkdown}
+                >
+                  {msg.content}
+                </ReactMarkdown>
+              )}
             </div>
           ))}
           <div ref={messagesEndRef} />
