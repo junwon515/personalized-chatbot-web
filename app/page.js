@@ -17,7 +17,6 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null);
   const [messages, setMessages] = useState([]);
 
   const messagesEndRef = useRef(null);
@@ -69,7 +68,6 @@ export default function Home() {
       if (data.audioBase64) {
         const audioBlob = new Blob([new Uint8Array(Buffer.from(data.audioBase64, 'base64'))], { type: 'audio/mp4' });
         const audioUrl = URL.createObjectURL(audioBlob);
-        setAudioUrl(audioUrl);
         const audio = new Audio(audioUrl);
         audio.play();
       }
@@ -91,6 +89,7 @@ export default function Home() {
     recognition.lang = selectedLanguage;
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
+
     let finalTranscript = '';
 
     recognition.start();
@@ -105,9 +104,8 @@ export default function Home() {
     };
     
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      finalTranscript = transcript;
-      setInput(transcript);
+      finalTranscript = event.results[0][0].transcript;
+      setInput(finalTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -123,9 +121,7 @@ export default function Home() {
         return <code className={styles.inlineCode}>{children}</code>;
       }
       return (
-        <SyntaxHighlighter
-          language={language}
-        >
+        <SyntaxHighlighter language={language}>
           {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>
       );

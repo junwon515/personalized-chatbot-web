@@ -56,7 +56,7 @@ export default function CustomSetting() {
                     <Col className="d-flex align-items-center" xs="auto">
                         {/* 언어 선택 드롭다운 */}
                         <Dropdown onSelect={(lang) => setSelectedLanguage(lang)}>
-                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                        <Dropdown.Toggle variant="secondary">
                             {supportedLanguages.find((lang) => lang.code === selectedLanguage)?.label || "언어 선택"}
                         </Dropdown.Toggle>
 

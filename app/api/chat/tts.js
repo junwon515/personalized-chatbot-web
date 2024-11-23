@@ -4,7 +4,6 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-
 export default async function TTS(input) {
     const response = await openai.audio.speech.create({
         model: "tts-1",
