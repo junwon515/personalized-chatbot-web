@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { useState, useRef, useEffect } from 'react';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -24,13 +24,10 @@ export default function Home() {
   // 페이지 새로고침 시 경고문 표시
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-      const confirmationMessage = "변경사항이 저장되지 않을 수 있습니다.";
-      event.returnValue = confirmationMessage;
-      return confirmationMessage;
+      event.returnValue = "변경사항이 저장되지 않을 수 있습니다.";
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
@@ -46,29 +43,31 @@ export default function Home() {
     if (!message.trim() || loading) return;
 
     const userMessage = { role: "user", content: message };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
-
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/chat", {
-        message: message,
-        goal: goal,
-        task: task,
-        creativity: creativity,
-        responseFormat: responseFormat,
-        messages: messages,
+      const { data } = await axios.post("/api/chat", {
+        message,
+        goal,
+        task,
+        creativity,
+        responseFormat,
+        messages,
       });
 
-      const data = response.data;
-      const assistantResponse = { role: "assistant", content: data.response };
-      setMessages((prevMessages) => [...prevMessages, assistantResponse]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: data.response },
+      ]);
 
       if (data.audioBase64) {
-        const audioBlob = new Blob([new Uint8Array(Buffer.from(data.audioBase64, 'base64'))], { type: 'audio/mp4' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
+        const audioBlob = new Blob(
+          [new Uint8Array(Buffer.from(data.audioBase64, "base64"))],
+          { type: "audio/mp4" }
+        );
+        const audio = new Audio(URL.createObjectURL(audioBlob));
         audio.play();
       }
     } catch (error) {
@@ -80,50 +79,42 @@ export default function Home() {
 
   // 음성 인식 시작
   const startListening = () => {
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+    const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
       alert("음성 인식 기능을 지원하지 않는 브라우저입니다.");
       return;
     }
 
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    const recognition = new SpeechRecognition();
     recognition.lang = selectedLanguage;
     recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
 
     let finalTranscript = '';
 
-    recognition.start();
-
-    recognition.onstart = () => {
-      setIsListening(true);
-    };
-
+    recognition.onstart = () => setIsListening(true);
     recognition.onend = () => {
       setIsListening(false);
       handleSendMessage(finalTranscript);
     };
-    
     recognition.onresult = (event) => {
       finalTranscript = event.results[0][0].transcript;
       setInput(finalTranscript);
     };
-
-    recognition.onerror = (event) => {
+    recognition.onerror = (event) =>
       console.error("음성 인식 오류:", event.error);
-    };
+
+    recognition.start();
   };
 
   // ReactMarkdown에서 코드 블록을 커스터마이징하여 하이라이팅 적용
   const customRenderers = {
-    code({ node, inline, className, children, ...props }) {
-      const match = /language-(\w+)/.exec(className || '');
+    code({ inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
       return !inline && match ? (
-        <SyntaxHighlighter
-          language={match[1]}
-          PreTag="div"
-          {...props}
-        >
-          {String(children).replace(/\n$/, '')}
+        <SyntaxHighlighter language={match[1]} PreTag="div" {...props}>
+          {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>
       ) : (
         <code className={className} {...props}>
@@ -141,10 +132,14 @@ export default function Home() {
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`${styles.message} ${msg.role === "user" ? styles.userMessage : styles.botMessage}`}
+              className={`${styles.message} ${
+                msg.role === "user"
+                  ? styles.userMessage
+                  : styles.botMessage
+              }`}
             >
               {msg.role === "user" ? (
-                <div>{msg.content}</div>
+                msg.content
               ) : (
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}

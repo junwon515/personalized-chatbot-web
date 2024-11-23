@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import localFont from "next/font/local";
-import "./globals.css";
+import localFont from 'next/font/local';
+import './globals.css';
 import { CustomSettingProvider } from './data/client-data';
 import CustomSetting from './ui/custom-setting';
 

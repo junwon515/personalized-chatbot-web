@@ -51,7 +51,7 @@ export async function POST(req) {
         const assistantResponse = response.choices[0].message.content;
 
         // task가 3일 경우에만 TTS 호출
-        const ttsResponse = (task === 3)
+        const ttsResponse = (task == 3)
             ? await TTS(assistantResponse.split(/피드백:/)[0] || assistantResponse)
             : null;
 
