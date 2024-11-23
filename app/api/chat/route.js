@@ -26,12 +26,15 @@ export async function POST(req) {
     // learningMessage 생성
     const learningMessage = GenerateLearningContent(task, creativity, responseFormat);
 
+    // 최근 10개 메시지만 사용
+    const latestMessages = messages.slice(-10);
+
     try {
         // ChatGPT 메시지 생성
         const chatMessages = [
             ...(goal ? [{ role: 'system', content: `목표: ${goal}` }] : []),
             ...(learningMessage ? [{ role: 'system', content: learningMessage }] : []),
-            ...messages,
+            ...latestMessages,
             { role: 'user', content: message },
         ];
 
@@ -39,8 +42,10 @@ export async function POST(req) {
         const response = await openai.chat.completions.create({
             model: 'gpt-4o-mini',
             messages: chatMessages,
-            max_tokens: responseFormat === 0 ? 2500 : responseFormat === 1 ? 5000 : 1000,
-            temperature: creativity === 0 ? 0.5 : creativity === 1 ? 1 : 0,
+            frequency_penalty: creativity == 1 ? 1.5 : 0,
+            max_completion_tokens: responseFormat == 0 ? 2000 : responseFormat == 1 ? 4000 : 1000,
+            presence_penalty: creativity == 1 ? 1.5 : 0,
+            temperature: creativity == 0 ? 1 : creativity == 1.1 ? 1 : 0,
         });
 
         const assistantResponse = response.choices[0].message.content;
