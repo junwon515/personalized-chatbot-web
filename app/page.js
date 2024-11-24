@@ -151,7 +151,7 @@ export default function Home() {
               )}
             </div>
           ))}
-          <div ref={messagesEndRef} />
+          <div style={{ flex: "0 0 1px" }} ref={messagesEndRef} />
         </div>
       </div>
       

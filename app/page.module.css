@@ -21,7 +21,8 @@
     flex-direction: column; /* 세로로 쌓임 */
     gap: 50px; /* 메시지 간 간격 */
     width: 100%;
-    padding: 20px;
+    padding: 0 20px;
+    padding-top: 50px;
 }
 
 /* 메시지 박스 스타일 */
